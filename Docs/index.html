@@ -13,24 +13,31 @@
         <p>...Capture your Ideas..</p>
     </header>
     <main>
-    
     <form id="note-form">
-        <label>Note Title</label>
-        <br>
-        <input id="category" type="text" placeholder="Enter the title...">
-        <br>
-        <label>Type Something</label>
-        <br>
-        
-        <textarea id="body-input"></textarea>
-        <br>
-        <button type="submit" id="submit-btn">Submit</button>
+    <label for="note-title">Note Title</label>
+    <br>
+    <input
+        id="note-title"
+        type="text"
+        placeholder="Enter the title..."
+        maxlength="100"
+        required
+    >
+    <br>
 
+    <label for="body-input">Type Something</label>
+    <br>
+    <textarea id="body-input"></textarea>
+    <br>
 
-    </form>
-    <button id="load-btn">Load Notes</button>
-    <p id="status"></p>
-    <ul id="notes-list">Your Notes</ul>
+    <button type="submit" id="submit-btn">Submit</button>
+</form>
+
+<button type="button" id="load-btn">Load Notes</button>
+
+<p id="status" role="status" aria-live="polite"></p>
+<ul id="notes-list">Your Notes</ul>
+   
     </main>
     <footer>&copy;QuickNotes 2026 .All Rights Reserved</footer>
     
