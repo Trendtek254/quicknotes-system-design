@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Quicknotes</title>
+    <link rel="stylesheet" href="style.css">
+    <script src="api.js" defer></script>
+</head>
+<body>
+    <header>
+        <h1>QuickNotes</h1>
+        <p>...Capture your Ideas..</p>
+    </header>
+    <main>
+    
+    <form id="note-form">
+        <label>Note Title</label>
+        <br>
+        <input id="category" type="text" placeholder="Enter the title...">
+        <br>
+        <label>Type Something</label>
+        <br>
+        
+        <textarea id="body-input"></textarea>
+        <br>
+        <button type="submit" id="submit-btn">Submit</button>
+
+
+    </form>
+    <button id="load-btn">Load Notes</button>
+    <p id="status"></p>
+    <ul id="notes-list">Your Notes</ul>
+    </main>
+    <footer>&copy;QuickNotes 2026 .All Rights Reserved</footer>
+    
+</body>
+</html>
