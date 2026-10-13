@@ -1,0 +1,196 @@
+/* Reset default browser spacing */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+/* General page styles */
+body {
+    font-family: Arial, Helvetica, sans-serif;
+    background-color: #f4f7fb;
+    color: #243047;
+    line-height: 1.6;
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+}
+
+.container {
+    width: 90%;
+    max-width: 1000px;
+    margin: 0 auto;
+}
+
+/* Header */
+.site-header {
+    background-color: #243b64;
+    color: #ffffff;
+    padding: 28px 0;
+    text-align: center;
+}
+
+.site-header h1 {
+    font-size: 2rem;
+    margin-bottom: 5px;
+}
+
+.site-header p {
+    color: #dbe7ff;
+}
+
+/* Main content */
+main.container {
+    flex: 1;
+    padding-top: 30px;
+    padding-bottom: 30px;
+}
+
+section {
+    background-color: #ffffff;
+    padding: 24px;
+    margin-bottom: 24px;
+    border-radius: 12px;
+    box-shadow: 0 3px 12px rgba(0, 0, 0, 0.06);
+}
+
+h2 {
+    margin-bottom: 18px;
+    color: #243b64;
+}
+
+/* Form */
+.form-group {
+    margin-bottom: 18px;
+}
+
+label {
+    display: block;
+    margin-bottom: 6px;
+    font-weight: bold;
+}
+
+input,
+textarea {
+    width: 100%;
+    padding: 12px;
+    border: 1px solid #ccd5e2;
+    border-radius: 7px;
+    font: inherit;
+    background-color: #ffffff;
+}
+
+input:focus,
+textarea:focus {
+    outline: 2px solid #91b8ff;
+    border-color: #477de0;
+}
+
+textarea {
+    resize: vertical;
+}
+
+/* Buttons */
+button {
+    background-color: #315fca;
+    color: #ffffff;
+    border: none;
+    border-radius: 7px;
+    padding: 11px 18px;
+    font: inherit;
+    font-weight: bold;
+    cursor: pointer;
+    transition: background-color 0.2s ease,
+                transform 0.2s ease;
+}
+
+button:hover {
+    background-color: #23499e;
+    transform: translateY(-1px);
+}
+
+button:focus-visible {
+    outline: 3px solid #91b8ff;
+    outline-offset: 3px;
+}
+
+.secondary-btn {
+    margin-top: 12px;
+    background-color: #52657f;
+}
+
+.secondary-btn:hover {
+    background-color: #394a62;
+}
+
+#status {
+    margin-top: 14px;
+    color: #52657f;
+    font-size: 0.95rem;
+}
+
+/* Notes layout */
+.notes-list {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 18px;
+}
+
+.note-card {
+    background-color: #f8faff;
+    border: 1px solid #dce5f2;
+    border-radius: 9px;
+    padding: 18px;
+    overflow-wrap: anywhere;
+}
+
+.note-card h3 {
+    color: #243b64;
+    margin-bottom: 8px;
+}
+
+.note-card p {
+    margin-bottom: 12px;
+    white-space: pre-wrap;
+}
+
+.note-card button {
+    margin-top: 8px;
+    background-color: #c0392b;
+}
+
+.note-card button:hover {
+    background-color: #922b21;
+}
+
+/* Footer */
+.site-footer {
+    text-align: center;
+    padding: 18px;
+    background-color: #e5ebf4;
+    color: #52657f;
+    font-size: 0.9rem;
+}
+
+/* Responsive layout for phones */
+@media (max-width: 600px) {
+    .container {
+        width: 92%;
+    }
+
+    .site-header h1 {
+        font-size: 1.7rem;
+    }
+
+    section {
+        padding: 18px;
+    }
+
+    .notes-list {
+        grid-template-columns: 1fr;
+    }
+
+    button {
+        max-width: 100%;
+    }
+}
