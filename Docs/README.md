@@ -59,4 +59,5 @@ Future Improvements
 - Build a persistent backend API.
 - Connect the application to a real database.
 - Add user authentication and authorization.
-- Implement note editing and tag management.
+- Implement note editing and tag management.QQuickNotes
+
