@@ -1,69 +1,104 @@
+const API_URL = "https://jsonplaceholder.typicode.com/posts";
+
 const form = document.querySelector("#note-form");
-const submitBtn=document.querySelector("#submit-btn");
+const titleInput = document.querySelector("#note-title");
+const bodyInput = document.querySelector("#body-input");
+const submitBtn = document.querySelector("#submit-btn");
 const loadButton = document.querySelector("#load-btn");
 const message = document.querySelector("#status");
 const notesList = document.querySelector("#notes-list");
-const bodyInput=document.querySelector("#body-input");
-const titleInput=document.querySelector("#note-title");
-const API_URL= "https://jsonplaceholder.typicode.com/posts";
+
+
+function showStatus(text, type = "") {
+    message.textContent = text;
+    message.className = type;
+}
+
 
 async function request(url, options = {}) {
     const response = await fetch(url, options);
 
     if (!response.ok) {
-        throw new Error("The server request failed.");
+        throw new Error(`Request failed: ${response.status}`);
+    }
+
+    
+    if (response.status === 204) {
+        return {
+            data: null,
+            status: response.status
+        };
     }
 
     const data = await response.json();
 
     return {
-        data: data,
+        data,
         status: response.status
     };
 }
 
 
+function renderNote(note, addToTop = false) {
+    const item = document.createElement("li");
+    const title = document.createElement("h2");
+    const body = document.createElement("p");
+    const deleteButton = document.createElement("button");
+
+    title.textContent = note.title;
+    body.textContent = note.body || "";
+
+    deleteButton.textContent = "Delete";
+    deleteButton.type = "button";
+
+    deleteButton.addEventListener("click", () => {
+        deleteNote(note.id, item, deleteButton);
+    });
+
+    item.append(title, body, deleteButton);
+
+    if (addToTop) {
+        notesList.prepend(item);
+    } else {
+        notesList.appendChild(item);
+    }
+}
 
 
-
-
-
-
-
-
-async function loadNotes(){
-    loadButton.disabled=true;
-    message.textContent="Loading notes....";
+async function loadNotes() {
+    loadButton.disabled = true;
+    showStatus("Loading notes...");
     notesList.replaceChildren();
-    try{
-        const notes=await request(`${API_URL}?_limit=10`);
-        if (notes.length===0){
-            const emptyMessage=document.createElement("li");
-            emptyMessage.textContent = "No notes available yet.";
-            notesList.appendChild(emptyMessage);
-            message.textContent="No notes were found.";
-            return;
-         }
-         notes.forEach(note=>{
-            const listItem=document.createElement("li");
-            const title=document.createElement("h2");
-            const body=document.createElement("p");
-            title.textContent=note.title;
-            body.textContent=note.body;
 
-            listItem.append(title,body);
-            notesList.appendChild(listItem);
-         });
-         message.textContent=`Loaded ${notes.length} notes from the server.`;
-    }catch (error) {
-        message.textContent="Sorry,we couldn't load your notes.Please try again.";
-        
-    }finally{
+    try {
+        const result = await request(`${API_URL}?_limit=10`);
+        const notes = result.data;
+
+        if (notes.length === 0) {
+            const emptyItem = document.createElement("li");
+            emptyItem.textContent = "No notes available yet.";
+            notesList.appendChild(emptyItem);
+
+            showStatus("No notes were found.");
+            return;
+        }
+
+        notes.forEach(note => renderNote(note));
+
+        showStatus(
+            `Loaded ${notes.length} notes from the server.`,
+            "success"
+        );
+    } catch (error) {
+        console.error("GET error:", error);
+
+        showStatus(
+            "Sorry, we couldn't load your notes. Please try again.",
+            "error"
+        );
+    } finally {
         loadButton.disabled = false;
     }
-    
-}
-loadButton.addEventListener("click",loadNotes);
 
 async function createNote(event) {
     event.preventDefault();
@@ -72,21 +107,21 @@ async function createNote(event) {
     const body = bodyInput.value.trim();
 
     if (!title) {
-        message.textContent = "Please enter a title.";
-        message.className = "error";
+        showStatus("Please enter a note title.", "error");
+        titleInput.focus();
         return;
     }
 
     if (title.length > 100) {
-        message.textContent =
-            "Title must be 100 characters or fewer.";
-        message.className = "error";
+        showStatus(
+            "Title must be 100 characters or fewer.",
+            "error"
+        );
         return;
     }
 
     submitBtn.disabled = true;
-    message.textContent = "Creating note...";
-    message.className = "";
+    showStatus("Creating note...");
 
     try {
         const result = await request(API_URL, {
@@ -95,39 +130,68 @@ async function createNote(event) {
                 "Content-Type": "application/json"
             },
             body: JSON.stringify({
-                title: title,
-                body: body,
+                title,
+                body,
                 userId: 1
             })
         });
 
         const note = result.data;
 
-        const listItem = document.createElement("li");
-        const heading = document.createElement("h2");
-        const paragraph = document.createElement("p");
+        
+        renderNote(note, true);
 
-        heading.textContent = note.title;
-        paragraph.textContent = note.body || "";
-
-        listItem.append(heading, paragraph);
-        notesList.prepend(listItem);
-
-        message.textContent =
-            `Note created (status ${result.status}, id ${note.id}).`;
-        message.className = "success";
+        showStatus(
+            `Note created (status ${result.status}, id ${note.id}).`,
+            "success"
+        );
 
         form.reset();
-
     } catch (error) {
-        console.error(error);
-        message.textContent =
-            "Sorry, we couldn't create your note. Please try again.";
-        message.className = "error";
+        console.error("POST error:", error);
 
+        showStatus(
+            "Sorry, we couldn't create your note. Please try again.",
+            "error"
+        );
     } finally {
         submitBtn.disabled = false;
     }
 }
 
+
+async function deleteNote(id, item, deleteButton) {
+    if (!confirm("Are you sure you want to delete this note?")) {
+        return;
+    }
+
+    deleteButton.disabled = true;
+    showStatus("Deleting note...");
+
+    try {
+        const result = await request(`${API_URL}/${id}`, {
+            method: "DELETE"
+        });
+
+        
+        item.remove();
+
+        showStatus(
+            `Note deleted successfully (status ${result.status}).`,
+            "success"
+        );
+    } catch (error) {
+        console.error("DELETE error:", error);
+
+        showStatus(
+            "Sorry, we couldn't delete the note. Please try again.",
+            "error"
+        );
+
+        deleteButton.disabled = false;
+    }
+}
+
+
+loadButton.addEventListener("click", loadNotes);
 form.addEventListener("submit", createNote);
